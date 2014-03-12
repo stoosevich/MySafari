@@ -8,7 +8,13 @@
 
 #import "ViewController.h"
 
-@interface ViewController ()
+@interface ViewController () <UITextFieldDelegate, UIWebViewDelegate>
+
+@property (strong, nonatomic) IBOutlet UIWebView *myWebView;
+
+@property (strong, nonatomic) IBOutlet UITextField *myURLTextField;
+@property (strong, nonatomic) IBOutlet UIButton *backButton;
+@property (strong, nonatomic) IBOutlet UIButton *forwadButton;
 
 @end
 
@@ -17,13 +23,77 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+    //Retrieve the value of myURLTextField
+	NSString *string = @"http://cnn.com";
+    //create an NSURL using string value
+    NSURL *url = [NSURL URLWithString:string];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    
+    [self.myWebView loadRequest:request];
+    
+    
 }
 
-- (void)didReceiveMemoryWarning
+
+- (BOOL) textFieldShouldReturn:(UITextField *)textField
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    //Retrieve the value of myURLTextField
+	NSString *string = textField.text;
+    //create an NSURL using string value
+    NSURL *url = [NSURL URLWithString:string];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    
+    [self.myWebView loadRequest:request];
+    return YES;
 }
+- (IBAction)onBackButtonPressed:(id)sender
+{
+    [self.myWebView goBack];
+    
+}
+
+- (IBAction)onForwardButtonPressed:(id)sender
+{
+    [self.myWebView goForward];
+    
+    
+}
+
+- (IBAction)onStopLoadingButtonPressed:(id)sender
+{
+    [self.myWebView stopLoading];
+}
+
+- (IBAction)onReloadButtonPressed:(id)sender
+{
+    [self.myWebView reload];
+}
+
+- (void)webViewDidStartLoad:(UIWebView *)webView
+{
+    
+    if (self.myWebView.canGoBack == NO)
+        
+    {
+        NSLog(@"returned yes" );
+        self.backButton.enabled = NO;
+        
+    }else{
+        self.backButton.enabled = YES;
+    }
+    if (self.myWebView.canGoForward == NO)
+    {
+        self.forwadButton.enabled = NO;
+        
+    } else
+    {
+        self.forwadButton.enabled = YES;
+    }
+}
+
+//- (void)webViewDidStartLoad:(UIWebView *)webView
+//{
+//    self.backButton.userInteractionEnabled = NO;
+//}
 
 @end
