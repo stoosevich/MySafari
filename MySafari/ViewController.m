@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 
-@interface ViewController () <UITextFieldDelegate, UIWebViewDelegate>
+@interface ViewController () <UITextFieldDelegate, UIWebViewDelegate, UITextFieldDelegate>
 
 @property (strong, nonatomic) IBOutlet UIWebView *myWebView;
 
@@ -37,15 +37,34 @@
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField
 {
-    //Retrieve the value of myURLTextField
-	NSString *string = textField.text;
-    //create an NSURL using string value
-    NSURL *url = [NSURL URLWithString:string];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    	NSString *string = textField.text;
+    NSURL *myURL;
+    if ([string hasPrefix:@"http://"])
     
-    [self.myWebView loadRequest:request];
-    return YES;
-}
+        myURL = [NSURL URLWithString:string];
+    else
+        myURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@",string]];
+    
+      NSURLRequest *request = [NSURLRequest requestWithURL:myURL];
+
+       [self.myWebView loadRequest:request];
+ return YES;
+    }
+
+
+
+        
+ 
+    
+//    //Retrieve the value of myURLTextField
+//	NSString *string = textField.text;
+//    //create an NSURL using string value
+//    NSURL *url = [NSURL URLWithString:string];
+ //   NSURLRequest *request = [NSURLRequest requestWithURL:url];
+//    
+ //   [self.myWebView loadRequest:request];
+
+
 - (IBAction)onBackButtonPressed:(id)sender
 {
     [self.myWebView goBack];
@@ -75,7 +94,7 @@
     if (self.myWebView.canGoBack == NO)
         
     {
-        NSLog(@"returned yes" );
+  //      NSLog(@"returned yes" );
         self.backButton.enabled = NO;
         
     }else{
@@ -91,9 +110,5 @@
     }
 }
 
-//- (void)webViewDidStartLoad:(UIWebView *)webView
-//{
-//    self.backButton.userInteractionEnabled = NO;
-//}
 
 @end
